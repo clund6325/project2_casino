@@ -24,16 +24,29 @@ def main_menu
   puts ""
   puts "Welcome #{@user_name}! You have $#{@user_wallet} to play with!"
   puts ""
-  print "Type Play To Be Taken To Our Casino Floor! Or Type 'exit' To Exit! "
+  print "Type 'play' To Be Taken To Our Casino Floor! Or Type 'exit' To Exit! "
   user_input = gets.strip.downcase
 
   if user_input == "play"
     casino_floor
   elsif user_input == "exit"
+    puts ""
     puts "Please Come Again!"
+    puts ""
     exit
+  else
+    puts ""
+    puts "Type 'play' or 'exit' "
+    user_input = gets.strip.downcase
+    if user_input == "play"
+      casino_floor
+    elsif user_input == "exit"
+      puts ""
+      puts "Please Come Again!"
+      puts ""
+      exit
+    end
   end
-  
 end
 
 def casino_floor
@@ -44,7 +57,45 @@ def casino_floor
   puts ""
   puts "~~~~~~~~~~~~~~~~~~"
   puts ""
-  puts "What Game Would You Like To Play?"
+  puts "#{@user_name}      #{@user_wallet}"
+  puts ""
+  puts "~~~~~~~~~~~~~~~~~~"
+  puts ""
+  puts "1) Slots"
+  puts "2) High Low"
+  puts "3) Blackjack"
+  puts "4) Exit"
+  puts ""
+  print "What Game Would You Like To Play? "
+  
+  game_choice = gets.strip.to_i
+
+  if game_choice == 1
+    slots
+  elsif game_choice == 2
+    high_low
+  elsif game_choice == 3
+    blackjack
+  elsif game_choice == 4
+    puts ""
+    puts "Thanks for playing! Come again!"
+    puts ""
+    exit
+  else
+    puts "Please Choose An Option"
+    casino_floor
+  end
 end
 
+def slots
+
+end
+
+def high_low
+
+end
+
+def blackjack
+
+end
 main_menu
