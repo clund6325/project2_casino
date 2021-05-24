@@ -1,5 +1,8 @@
 require 'pry'
 require 'colorize'
+require_relative 'wallet.rb'
+require_relative 'deck.rb'
+require_relative 'card.rb'
 # Start game player has a name and an initial bankroll
 # Player can go to different games via menu
   # Slots
@@ -21,10 +24,12 @@ def main_menu
   puts ""
   puts "Your Wallet Amount: "
   @user_wallet = gets.strip.to_f
+  wallet = Wallet.new(@user_wallet)
   puts ""
   puts "~~~~~~~~~~~~~~~~~~"
   puts ""
-  puts "Welcome #{@user_name}! You have $#{@user_wallet} to play with!"
+  print "Welcome #{@user_name}! "
+  wallet.print_balance
   puts ""
   print "Type 'play' To Be Taken To Our Casino Floor! Or Type 'exit' To Exit! "
   user_input = gets.strip.downcase
@@ -59,7 +64,9 @@ def casino_floor
   puts ""
   puts "~~~~~~~~~~~~~~~~~~"
   puts ""
-  puts "#{@user_name}      #{@user_wallet}"
+  print "#{@user_name} "
+  wallet = Wallet.new(@user_wallet)
+  wallet.print_balance
   puts ""
   puts "~~~~~~~~~~~~~~~~~~"
   puts ""
@@ -130,12 +137,27 @@ def high_low
   # would you like to play again? y/n
     # == yes, loop back to start
     # == no take back to casino floor
+    puts ""
+    puts "~~~~~~~~~~~~~~~~~~"
+    puts ""
+    puts "WELCOME TO HIGH/LOW!! In order to win you must correctly guess whether the next card will be higher or lower!"
+    puts ""
+    puts "~~~~~~~~~~~~~~~~~~"
+    puts ""
+    print "#{@user_name} "
+    wallet = Wallet.new(@user_wallet)
+    wallet.print_balance
+    puts ""
+    puts "How much would you like to bet? "
+    bet_amount = gets.strip.to_f
+    wallet.validate_money(bet_amount)
+    wallet.subtract_money(bet_amount)
 end
 
 def blackjack
   # "Welcome to Blackjack! Your Goal is to get closer to 21 than the dealer!"
   # Displays player name and wallet amount
   # How much would you like to bet? get user input bet_amount
-  
+
 end
 main_menu
