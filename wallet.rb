@@ -4,7 +4,7 @@ class  Wallet
   end
   def validate_money(spending_money)
     if @wallet.to_f - spending_money.to_f >= 0
-      print "money"
+      true
     else
       false 
     end
