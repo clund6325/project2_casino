@@ -185,6 +185,85 @@ def blackjack
   # "Welcome to Blackjack! Your Goal is to get closer to 21 than the dealer!"
   # Displays player name and wallet amount
   # How much would you like to bet? get user input bet_amount
+  puts "Welcome to the Blackjack table!"
+    user = Player.new(@user_name, [], @user_wallet, 0)
+    dealer = Player.new('dealer', [], 100000, 0)
 
-end
+    puts "How much would you like to bet?"
+    user_bet = gets.chomp.to_i
+      if user_bet <= @user_wallet
+        @user_wallet = @user_wallet - user_bet
+      else
+        puts "You don't have enough money to bet that amount."
+        blackjack
+      end
+
+    puts "Here are your cards..."
+    #player receives two cards at random
+    deck = Deck.new
+    deck.shuffle_cards
+    deck.deal(2, user)
+    puts "#{user.hand[0].rank} of #{user.hand[0].suit}"
+    puts "#{user.hand[1].rank} of #{user.hand[1].suit}"
+    puts "Your cards total:"
+    user.total << user.hand[0].value + user.hand[1].value
+    puts user.total
+    puts "The dealer also has two cards. The first is:"
+    #dealer receives two cards at random
+    deck.deal(2, dealer)
+    #dealer shows one of the cards in that hand array
+    puts "#{dealer.hand[0].rank} of #{dealer.hand[0].suit}"
+    
+    puts "Do you want to hit or stand?"
+    #player decides to hit or stand ; get strip for conditional
+    user_choice = gets.chomp.to_s
+    if user_choice == "hit"
+      deck.deal(1, user)
+      puts "#{user.hand[2].rank} of #{user.hand[2].suit}"
+      puts "Your cards total:"
+      user.total << user.hand[0].value + user.hand[1].value + user.hand[2].value
+      puts user.total
+    elsif user_choice == "stand"
+      #dealer reveals cards
+      puts "Dealer's second card is: #{dealer.hand[1].rank} of #{dealer.hand[1].suit}"
+      puts "Dealer's cards total:"
+      dealer.total << dealer.hand[0].value + dealer.hand[1].value
+      puts dealer.total
+    else 
+      puts "Error. Choose 'hit' or 'stand'."
+    end
+  
+    puts "The winner is:"
+    #some conditional with whoever has the lowest difference when calculating 21 - total 
+      if user.total > 21
+        puts "The dealer wins."
+        puts "You lost $#{user_bet}."
+      elsif 21 - user.total > 21 - dealer.total
+        puts "The dealer wins."
+        puts "You lost $#{user_bet}."
+      elsif user.total == dealer.total
+        puts "Draw."
+        @user_wallet = @user_wallet + user_bet
+      elsif 21 - user.total < 21 - dealer.total
+        puts "You win!"
+        blackjack_win = user_bet * 2
+        @user_wallet << blackjack_win
+        puts "You won $#{blackjack_win}"
+      else 
+        puts "You win!"
+        @user_wallet << blackjack_win
+        puts "You won $#{blackjack_win}"
+      end
+    puts "Your current bankroll is $#{@user_wallet}."
+    puts "Do you want to play again? (y/n)"
+    #include conditional to loop back or exit
+      user_replay = gets.chomp.to_s.downcase
+      if user_replay == 'y'
+        blackjack
+      elsif user_replay == 'n'
+        main_menu
+      else 
+        puts "Error. Choose y or n."
+      end
+  end
 main_menu

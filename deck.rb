@@ -16,13 +16,36 @@ class Deck
   end
   
   def generate_deck
+    @ranks.each do |rank|
+      if rank == 2
+        value = 2
+      elsif rank == 3
+        value = 3
+      elsif rank == 4
+        value = 4
+      elsif rank == 5
+        value = 5
+      elsif rank == 6
+        value = 6
+      elsif rank == 7
+        value = 7
+      elsif rank == 8
+        value = 8
+      elsif rank == 9
+        value = 9
+      elsif rank == 'A'
+        value = 11
+      else
+        value = 10
+      end
     @suits.each do |suit|
-      @ranks.size.times do |i|
+      # @ranks.size.times do |i|
         # Ternary Operator
         color = (suit == 'Spades' || suit == 'Clubs') ? 'Black' : 'Red' 
-        @cards << Card.new(@ranks[i], suit, color)
+        @cards << Card.new(rank, suit, color, value)
       end
     end
+    @cards.shuffle!
   end
  
    def display_cards
@@ -30,7 +53,8 @@ class Deck
        puts "#{card.rank} #{card.suit} (#{card.color})"
      end
    end
+
    def deal (num, player)
     num.times {@cards.shift.generate_card(player)}
-  end
+   end
  end
