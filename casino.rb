@@ -9,6 +9,8 @@ require_relative 'card.rb'
   # High / Low!!!
 # Player places bet and wins / loses (hint: rand)
 # Player's bankroll goes up and down with wins and losses
+@deck = Deck.new
+@card = Card.new
 def main_menu
   puts ""
   puts "~~~~~~~~~~~~~~~~~~"
@@ -151,7 +153,21 @@ def high_low
     puts "How much would you like to bet? "
     bet_amount = gets.strip.to_f
     wallet.validate_money(bet_amount)
-    wallet.subtract_money(bet_amount)
+    puts ""
+    dispaly = Deck.new
+    deck.display_cards
+    puts ""
+    puts "~~~~~~~~~~~~~~~~~~"
+    puts ""
+    puts "1) Higher"
+    puts "2) Lower"
+    puts "Will the next card be higher or lower? "
+    print "Please selecter 1 for Higher or 2 for Lower! "
+    user_guess = gets.strip.to_i
+    @deck.display_cards
+    if user_guess == 1
+      puts "CONGRATULATIONS!!"
+    end
 end
 
 def blackjack

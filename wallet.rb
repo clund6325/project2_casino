@@ -15,7 +15,7 @@ class  Wallet
   end
 
   def add_money(money)
-    @wallet += money
+    @wallet += money.to_f
   end
 
   def print_balance
