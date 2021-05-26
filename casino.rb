@@ -12,8 +12,6 @@ require_relative 'player.rb'
   # High / Low!!!
 # Player places bet and wins / loses (hint: rand)
 # Player's bankroll goes up and down with wins and losses
-# @deck = Deck.new
-# card = Card.new
 def main_menu
   puts ""
   puts "~~~~~~~~~~~~~~~~~~"
