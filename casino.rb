@@ -232,7 +232,7 @@ def high_low
     # print "#{user.hand[0].rank} of #{user.hand[0].suit}"
     deck = Deck.new
     deck.shuffle_cards
-      deck.deal(1, user)
+      card_1 = deck.deal(1, user)
       puts "#{user.hand[0].rank} of #{user.hand[0].suit}"
     # deck = Deck.new
     # deck.display_cards
@@ -247,8 +247,22 @@ def high_low
     
     card_2 = deck.deal(1, user)
     puts "#{user.hand[1].rank} of #{user.hand[1].suit}"
-    if user_guess == 1
-      puts "CONGRATULATIONS!!"
+
+    if user_guess == 1 && card_1 < card_2
+      wallet.add_money(bet_amount)
+      puts "CONGRATULATIONS!! $#{bet_amount} has been added to your wallet!"
+      wallet.print_balance
+    elsif user_guess == 1 && card_1 > card_2
+      wallet.subtract_money(bet_amount)
+      puts "Oh No! Wrong guess! $#{bet_amount} has been subtracted from your wallet!"
+    elsif user_guess == 2 && card_1 > card_2
+      wallet.add_money(bet_amount)
+      puts "CONGRATULATIONS!! $#{bet_amount} has been added to your wallet!"
+      wallet.print_balance
+    elsif user_guess == 2 && card_1 < card_2
+      wallet.subtract_money(bet_amount)
+      puts "Oh No! Wrong guess! $#{bet_amount} has been subtracted from your wallet!"
+      wallet.print_balance
     end
 end
 
