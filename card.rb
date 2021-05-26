@@ -8,4 +8,9 @@ class Card
     @suit = suit
     @color = color
   end
+  def generate_card(player)
+    new_card = Card.new rank, suit, color
+    player.hand << new_card
+    # player.total = player.total + new_card.value
+  end
  end

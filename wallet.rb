@@ -6,7 +6,8 @@ class  Wallet
     if @wallet.to_f - spending_money.to_f >= 0
       true
     else
-      false 
+      puts "You don't have enough money! Get out of here, ya bum!!"
+      exit
     end
   end
 

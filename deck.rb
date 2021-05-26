@@ -12,7 +12,7 @@ class Deck
   end
  
   def shuffle_cards
-   @cards.shuffle
+   @cards.shuffle!
   end
   
   def generate_deck
@@ -26,8 +26,11 @@ class Deck
   end
  
    def display_cards
-     @cards.shuffle.each do |card|
+     @cards.shuffle.each_with_index do |card|
        puts "#{card.rank} #{card.suit} (#{card.color})"
      end
    end
+   def deal (num, player)
+    num.times {@cards.shift.generate_card(player)}
+  end
  end

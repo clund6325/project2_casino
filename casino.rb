@@ -3,6 +3,7 @@ require 'colorize'
 require_relative 'wallet.rb'
 require_relative 'deck.rb'
 require_relative 'card.rb'
+require_relative 'player.rb'
 # Start game player has a name and an initial bankroll
 # Player can go to different games via menu
   # Slots
@@ -154,8 +155,16 @@ def high_low
     bet_amount = gets.strip.to_f
     wallet.validate_money(bet_amount)
     puts ""
+    user = Player.new(@user_name, [], @user_wallet)
+    # card = Card.new
+    # card.generate_card
+    # print "#{user.hand[0].rank} of #{user.hand[0].suit}"
     deck = Deck.new
-    deck.display_cards
+    deck.shuffle_cards
+      deck.deal(1, user)
+      puts "#{user.hand[0].rank} of #{user.hand[0].suit}"
+    # deck = Deck.new
+    # deck.display_cards
     puts ""
     puts "~~~~~~~~~~~~~~~~~~"
     puts ""
@@ -164,8 +173,9 @@ def high_low
     puts "Will the next card be higher or lower? "
     print "Please selecter 1 for Higher or 2 for Lower! "
     user_guess = gets.strip.to_i
-    deck = Deck.new
-    deck.display_cards
+    
+    card_2 = deck.deal(1, user)
+    puts "#{user.hand[1].rank} of #{user.hand[1].suit}"
     if user_guess == 1
       puts "CONGRATULATIONS!!"
     end
