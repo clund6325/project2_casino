@@ -100,23 +100,94 @@ def casino_floor
 end
 
 def slots
-  # "Welcome to slots! Get Three Numbers in a row to Win!"
-  # displays player name and wallet amount
-  # how much would you like to bet. bet_amount == gets
-  # player pulls lever
-    # puts/gets saying "type 'pull' to pull lever"
-  #  3 numbers display
-    # use puts and rand to generate 3 random number (rand1 rand2 rand3)
-  #  if they match, the player wins
-    # if rand1 == rand2 && rand2 == rand3 players money doubles
-    # add bet_amount to @user_wallet
-  #  If they don't match, the player loses
-    # else "tough luck" minus bet_amount from @user_wallet
-  # displays player name and new @user_wallet
-  # would you like to play again? y/n
-    # == yes, loop back to start
-    # == no take back to casino floor
-end
+
+  @winnings = []
+  @user_wager = []
+  @fruits = ['grape', 'pineapple', 'clover', 'watermelon', 'diamond', 'lemon', 'cherry', 'horseshoe', 'seven', 'bell']
+
+      # bankroll is displayed 
+      # and bankroll and winning variable are declared.  player is asked how much $ to want to play with
+      # code for slots
+      # slot game costs one dollar, which is one token
+  puts ""
+  puts "Let's Play Slots".colorize(:red)
+  puts "Total cash: $#{@user_wallet}".colorize(:green)
+  puts "------------------------------------------------------------"
+  
+  puts "The stakes of the game are:"
+  puts ""
+  puts "You make a wager."
+  puts ""
+  puts  "If 2 slots are equal, the user wins 10x the wager"
+  puts ""
+  puts "If 3 slots are equal, the user wins 100x the wager"
+  puts ""
+  puts "If no slots are equal, the user loses the value of the wager"
+  puts ""
+  puts "Would you like to stay and play?  type y/n"
+  puts ""
+  user_input = gets.strip
+      if user_input == "n"
+          puts "goodbye" 
+          casino_floor
+      else 
+          wager_validation
+      end
+  end
+              
+  def wager_validation
+  
+      puts "You may wager only the amount that you have in the bankroll, which is $#{@user_wallet}"
+          puts "How much would you like to wager or press 0 to return to casino menu?"
+          @user_wager = gets.strip.to_i
+              if @user_wallet >= @user_wager && @user_wager > 0
+                  pull_lever
+              elsif @user_wager == 0
+                  casino_floor
+              else 
+                  puts "Error. Please enter a valid number" 
+                  wager_validation
+              end
+  end
+  
+  def pull_lever
+      slot_1 = @fruits.sample
+      slot_2 = @fruits.sample
+      slot_3 = @fruits.sample
+  
+      puts "#{slot_1} - #{slot_2} - #{slot_3}"
+      
+      if slot_1==slot_2 && slot_2==slot_3
+              @winnings = @user_wager * 100
+  
+  
+      elsif slot_1==slot_2 || slot_2==slot_3 || slot_1==slot_3
+              @winnings = @user_wager * 10
+  
+      else
+              @winnings = 0      
+      end
+  
+      if @winnings>0
+          puts "You just won $#{@winnings}!"
+          @user_wallet += @winnings
+      else 
+          puts "You've lost your wager, which was $#{@user_wager}"
+          @user_wallet = @user_wallet - @user_wager
+      
+      end
+  
+      puts "Your new balance is $#{@user_wallet}"
+          if @user_wallet == 0
+              puts "return to casino floor and add money to your bankroll"
+              casino_floor
+          else 
+              puts "Play again? type y/n"
+              user_input = gets.strip
+              user_input == 'n' ? casino_floor : wager_validation
+          end
+          
+  end
 
 def high_low
   # "Welcome to High/Low! In order to win you must correctly"
