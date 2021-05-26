@@ -1,8 +1,10 @@
 class Player
-  attr_accessor :name, :hand, :bankroll 
-  def initialize(name, hand, bankroll)
+  attr_accessor :name, :hand, :bankroll, :total
+
+  def initialize(name, hand, bankroll, total)
     @name = name
     @hand = hand
     @bankroll = bankroll
+    @total = total
   end
 end
