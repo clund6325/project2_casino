@@ -2,7 +2,9 @@ require 'pry'
 require 'colorize'
 require_relative 'wallet.rb'
 require_relative 'deck.rb'
+require_relative 'deck_two.rb'
 require_relative 'card.rb'
+require_relative 'card_two.rb'
 require_relative 'player.rb'
 # Start game player has a name and an initial bankroll
 # Player can go to different games via menu
@@ -27,12 +29,12 @@ def main_menu
   puts ""
   puts "Your Wallet Amount: "
   @user_wallet = gets.strip.to_f
-  wallet = Wallet.new(@user_wallet)
+  @wallet = Wallet.new(@user_wallet)
   puts ""
   puts "~~~~~~~~~~~~~~~~~~"
   puts ""
   print "Welcome #{@user_name}! "
-  wallet.print_balance
+  @wallet.print_balance
   puts ""
   print "Type 'play' To Be Taken To Our Casino Floor! Or Type 'exit' To Exit! "
   user_input = gets.strip.downcase
@@ -68,8 +70,7 @@ def casino_floor
   puts "~~~~~~~~~~~~~~~~~~"
   puts ""
   print "#{@user_name} "
-  wallet = Wallet.new(@user_wallet)
-  wallet.print_balance
+  @wallet.print_balance
   puts ""
   puts "~~~~~~~~~~~~~~~~~~"
   puts ""
@@ -111,7 +112,7 @@ def slots
       # slot game costs one dollar, which is one token
   puts ""
   puts "Let's Play Slots".colorize(:red)
-  puts "Total cash: $#{@user_wallet}".colorize(:green)
+  puts @wallet.print_balance
   puts "------------------------------------------------------------"
   
   puts "The stakes of the game are:"
@@ -179,8 +180,8 @@ def slots
   
       puts "Your new balance is $#{@user_wallet}"
           if @user_wallet == 0
-              puts "return to casino floor and add money to your bankroll"
-              casino_floor
+              puts "return to main menu and add money to your bankroll"
+              main_menu
           else 
               puts "Play again? type y/n"
               user_input = gets.strip
@@ -219,23 +220,17 @@ def high_low
     puts "~~~~~~~~~~~~~~~~~~"
     puts ""
     print "#{@user_name} "
-    wallet = Wallet.new(@user_wallet)
-    wallet.print_balance
+    @wallet.print_balance
     puts ""
     puts "How much would you like to bet? "
     bet_amount = gets.strip.to_f
-    wallet.validate_money(bet_amount)
+    @wallet.validate_money(bet_amount)
     puts ""
-    user = Player.new(@user_name, [], @user_wallet)
-    # card = Card.new
-    # card.generate_card
-    # print "#{user.hand[0].rank} of #{user.hand[0].suit}"
-    deck = Deck.new
+    user = Player.new(@user_name, [], @user_wallet, 0)
+    deck = Deck2.new
     deck.shuffle_cards
       card_1 = deck.deal(1, user)
       puts "#{user.hand[0].rank} of #{user.hand[0].suit}"
-    # deck = Deck.new
-    # deck.display_cards
     puts ""
     puts "~~~~~~~~~~~~~~~~~~"
     puts ""
@@ -248,21 +243,29 @@ def high_low
     card_2 = deck.deal(1, user)
     puts "#{user.hand[1].rank} of #{user.hand[1].suit}"
 
-    if user_guess == 1 && card_1 < card_2
-      wallet.add_money(bet_amount)
+    if user_guess == 1 && user.hand[0].rank < user.hand[1].rank
+      @wallet.add_money(bet_amount)
       puts "CONGRATULATIONS!! $#{bet_amount} has been added to your wallet!"
-      wallet.print_balance
-    elsif user_guess == 1 && card_1 > card_2
-      wallet.subtract_money(bet_amount)
+      @wallet.print_balance
+      keep_playing
+    elsif user_guess == 1 && user.hand[0].rank > user.hand[1].rank
+      @wallet.subtract_money(bet_amount)
       puts "Oh No! Wrong guess! $#{bet_amount} has been subtracted from your wallet!"
-    elsif user_guess == 2 && card_1 > card_2
-      wallet.add_money(bet_amount)
+      @wallet.print_balance
+      keep_playing
+    elsif user_guess == 2 && user.hand[0].rank > user.hand[1].rank
+      @wallet.add_money(bet_amount)
       puts "CONGRATULATIONS!! $#{bet_amount} has been added to your wallet!"
-      wallet.print_balance
-    elsif user_guess == 2 && card_1 < card_2
-      wallet.subtract_money(bet_amount)
+      @wallet.print_balance
+      keep_playing
+    elsif user_guess == 2 && user.hand[0].rank < user.hand[1].rank
+      @wallet.subtract_money(bet_amount)
       puts "Oh No! Wrong guess! $#{bet_amount} has been subtracted from your wallet!"
-      wallet.print_balance
+      @wallet.print_balance
+      keep_playing
+    else
+      puts "Even. Try again"
+      keep_playing
     end
 end
 
@@ -270,7 +273,9 @@ def blackjack
   # "Welcome to Blackjack! Your Goal is to get closer to 21 than the dealer!"
   # Displays player name and wallet amount
   # How much would you like to bet? get user input bet_amount
+  puts ""
   puts "Welcome to the Blackjack table!"
+  puts ""
     user = Player.new(@user_name, [], @user_wallet, 0)
     dealer = Player.new('dealer', [], 100000, 0)
 
@@ -284,27 +289,32 @@ def blackjack
       end
 
     puts "Here are your cards..."
+    puts ""
     #player receives two cards at random
     deck = Deck.new
     deck.shuffle_cards
     deck.deal(2, user)
     puts "#{user.hand[0].rank} of #{user.hand[0].suit}"
     puts "#{user.hand[1].rank} of #{user.hand[1].suit}"
+    puts ""
     puts "Your cards total:"
+    # binding.pry
     user.total << user.hand[0].value + user.hand[1].value
     puts user.total
+    puts ""
     puts "The dealer also has two cards. The first is:"
     #dealer receives two cards at random
     deck.deal(2, dealer)
     #dealer shows one of the cards in that hand array
     puts "#{dealer.hand[0].rank} of #{dealer.hand[0].suit}"
-    
+    puts ""
     puts "Do you want to hit or stand?"
     #player decides to hit or stand ; get strip for conditional
     user_choice = gets.chomp.to_s
     if user_choice == "hit"
       deck.deal(1, user)
       puts "#{user.hand[2].rank} of #{user.hand[2].suit}"
+      puts ""
       puts "Your cards total:"
       user.total << user.hand[0].value + user.hand[1].value + user.hand[2].value
       puts user.total
@@ -332,11 +342,11 @@ def blackjack
       elsif 21 - user.total < 21 - dealer.total
         puts "You win!"
         blackjack_win = user_bet * 2
-        @user_wallet << blackjack_win
+        @user_wallet += blackjack_win
         puts "You won $#{blackjack_win}"
       else 
         puts "You win!"
-        @user_wallet << blackjack_win
+        @user_wallet += blackjack_win
         puts "You won $#{blackjack_win}"
       end
     puts "Your current bankroll is $#{@user_wallet}."
@@ -346,9 +356,25 @@ def blackjack
       if user_replay == 'y'
         blackjack
       elsif user_replay == 'n'
-        main_menu
+        casino_floor
       else 
         puts "Error. Choose y or n."
       end
+  
+end
+
+def keep_playing
+  puts ""
+  puts "Would you like to play again? (y/n)"
+  play_again = gets.strip.downcase
+  if play_again == "y"
+    high_low
+  elsif play_again == "n"
+    puts ""
+    puts "Thanks for playing High/Low!!"
+    puts ""
+    puts "Please play again!"
   end
+ casino_floor
+end
 main_menu

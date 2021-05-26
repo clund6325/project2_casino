@@ -1,4 +1,4 @@
-class Card
+class Card2
   # Getter and Setter methods for rank, suit and color
   attr_accessor :rank, :suit, :color, :value
   # Gets called when you call the new method to create an instance
@@ -10,14 +10,14 @@ class Card
     @value = value
   end
 
+  # def generate_card2(player)
+  #   new_card = Card2.new rank, suit, color, value
+  #   player.hand << new_card
+  #   player.total = player.total + new_card.value
+  # end
   def generate_card(player)
     new_card = Card.new rank, suit, color, value
     player.hand << new_card
-    player.total = player.total + new_card.value
+    # player.total = player.total + new_card.value
   end
-  # def generate_card(player)
-  #   new_card = Card.new rank, suit, color, value
-  #   player.hand << new_card
-  #   # player.total = player.total + new_card.value
-  # end
- end
+end
