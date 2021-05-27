@@ -136,10 +136,10 @@ def slots
               
   def wager_validation
   
-      puts "You may wager only the amount that you have in the bankroll, which is $#{@user_wallet}"
+      puts "You may wager only the amount that you have in the bankroll, which is $#{@wallet.get_wallet}"
           puts "How much would you like to wager or press 0 to return to casino menu?"
           @user_wager = gets.strip.to_i
-              if @user_wallet >= @user_wager && @user_wager > 0
+              if @wallet.get_wallet >= @user_wager && @user_wager > 0
                   pull_lever
               elsif @user_wager == 0
                   casino_floor
@@ -169,15 +169,17 @@ def slots
   
       if @winnings>0
           puts "You just won $#{@winnings}!"
-          @user_wallet += @winnings
+          @wallet.add_money(@winnings)
+          @wallet.print_balance
       else 
           puts "You've lost your wager, which was $#{@user_wager}"
-          @user_wallet = @user_wallet - @user_wager
+          @wallet.subtract_money(@user_wager)
+          @wallet.print_balance
       
       end
   
-      puts "Your new balance is $#{@user_wallet}"
-          if @user_wallet == 0
+      puts "Your new balance is $#{@wallet.get_wallet}"
+          if @wallet == 0
               puts "return to main menu and add money to your bankroll"
               main_menu
           else 
