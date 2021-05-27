@@ -20,6 +20,6 @@ class  Wallet
   end
 
   def print_balance
-    puts "Your current balance is $#{@wallet}"
+    puts "Your current balance is $#{@wallet}".colorize(:green)
   end
 end
